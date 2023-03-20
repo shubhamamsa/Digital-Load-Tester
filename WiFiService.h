@@ -29,6 +29,7 @@ class WiFiService   {
         static void pidHandler();
         static void currentHandler();
         static void powerHandler();
+        static void resistanceHandler();
         static void resetHandler();
         static void handleNotFound();
         static float sToF(String num);

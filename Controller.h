@@ -27,6 +27,7 @@ class Controller  {
     PID *pid;
     float dCurrent;
     float dPower;
+    float dResistance;
 
   public:
     Controller();
@@ -38,6 +39,7 @@ class Controller  {
     void calculatePower();
     void setDesiredCurrent(float);
     void setDesiredPower(float);
+    void setDesiredResistance(float);
     float getCurrent();
     float getVoltage(); 
     float getPower();

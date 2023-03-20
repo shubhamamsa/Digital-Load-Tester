@@ -1,12 +1,13 @@
 #include "Controller.h"
 
 Controller::Controller()
-  : voltageMultiplier(0.5212),
+  : voltageMultiplier(0.9275),
     currentMultiplier(0.1875),
     shuntResistance(1.1),
     dCurrent(0.0),
     dPower(0.0),
-    thresholdVoltage(2.6),
+    dResistance(0.0),
+    thresholdVoltage(3.0),
     currentMode(0)
 {
   pid = new PID(0.0, 0.4, 1.0, 0.1, 0.0, 4095.0);
@@ -33,9 +34,12 @@ void Controller::execute() {
       this->pid->setSetPoint(dCurrent);
       break;
     case 1:
-      curVal = this->power / this->getVoltage();
-      this->pid->setSetPoint(dPower / this->getVoltage());
+      curVal = this->power / this->voltage;
+      this->pid->setSetPoint(this->dPower / this->voltage);
       break;
+    case 2:
+      curVal = this->voltage / this->current;
+      this->pid->setSetPoint(this->dResistance);
   }
   voltageLevel = pid->feedback(curVal);
   if(thresholdVoltage > voltage)
@@ -60,6 +64,10 @@ void Controller::setDesiredCurrent(float dCurrent) {
 
 void Controller::setDesiredPower(float dPower) {
   this->dPower = dPower;
+}
+
+void Controller::setDesiredResistance(float dResistance) {
+  this->dResistance = dResistance;
 }
 
 void Controller::calculatePower() {

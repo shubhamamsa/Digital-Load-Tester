@@ -5,8 +5,8 @@
 // Attributes
 
 // WiFi Credentials
-char *ssid = "SlowWala";
-char *password = "KempaColaLite";
+char *ssid = "shubham";
+char *password = "12345671";
 
 // Output Time interval
 long long stime = millis();

@@ -7,7 +7,7 @@ WiFiService::WiFiService(const char *ssid, const char *password, Controller *con
     this->ssid = ssid;
     this->password = password;
     this->control = control;
-    this->elasticServer = "http://192.168.1.10/power_profile";
+    this->elasticServer = "http://192.168.237.127/power_profile";
     this->ntpServer = "pool.ntp.org";
     this->epochTime = 0;
 }
@@ -21,6 +21,7 @@ void WiFiService::initialize()  {
     server->on("/reset", resetHandler);
     server->on(UriBraces("/setCurrent/{}"), currentHandler);
     server->on(UriBraces("/setPower/{}"), powerHandler);
+    server->on(UriBraces("/setResistance/{}"), resistanceHandler);
     server->onNotFound(handleNotFound);
     server->begin();
     Serial.println("HTTP server started");
@@ -82,6 +83,14 @@ void WiFiService::powerHandler()  {
   control->setMode(1);
   control->setDesiredPower(power);
   server->send(200, "text/plain", "Power mode on\nPower set: "+arg0);
+}
+
+void WiFiService::resistanceHandler()  {
+  String arg0 = server->pathArg(0);
+  float resistance = sToF(arg0);
+  control->setMode(2);
+  control->setDesiredResistance(resistance);
+  server->send(200, "text/plain", "Constant Resistance mode on\nResistance set: "+arg0);
 }
 
 void WiFiService::handleNotFound() {
